@@ -41,20 +41,21 @@ export default {
 		const wrap = this.$refs['notice-bar-text'];
 		let width = el.scrollWidth;
 		let wrapWidth = wrap.clientWidth;
-		el.innerHTML = this.text + '&nbsp;&nbsp;&nbsp;&nbsp;' + this.text;
+		if (width <= wrapWidth) return;
 		let count = 0;
-		let leave = 20;
-		this.timer = setInterval(() => {
-			count -= 10;
-			if (count < width * -1 - leave) {
-				el.style.transition = 'none';
-				el.style.left = `${0}px`;
-				count = 0;
-			} else {
-				el.style.transition = 'all .3s linear';
-				el.style.left = `${count}px`;
-			}
-		}, 300); // 动画时间
+		setTimeout(() => {
+			this.timer = setInterval(() => {
+				count -= 10;
+				if (count < width * -1) {
+					el.style.transition = 'none';
+					el.style.left = `${wrapWidth}px`;
+					count = wrapWidth;
+				} else {
+					el.style.transition = 'all .3s linear';
+					el.style.left = `${count}px`;
+				}
+			}, 300); // 动画时间
+		}, 500);
 	},
 	destroyed() {
 		this.timer && clearTimeout(this.timer);
@@ -76,7 +77,7 @@ export default {
 .vcm-notice-bar{
 	display: flex;
 	._icon{
-		margin-left: 20px;
+		margin-left: 10px;
 	}
 	._btn{
 		padding-right: 10px;
