@@ -40,7 +40,7 @@ export default {
 		};
 	},
 	computed: {
-		
+
 	},
 	methods: {
 		renderRow(h, { name }) {

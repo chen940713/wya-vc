@@ -1,26 +1,44 @@
 <template>
-	<vc-notice-bar
+	<vc-m-notice-bar
 		:text="text"
-		:show-icon="true"
-		:show-close="true"
-		style="color: #f76a24; background-color: #fefcec;" />
+		show-icon
+		type="click"
+		@on-click="handleClickBar"
+		@icon-click="handleIconClick"
+		@text-click="handleTextClick"
+	/>
 </template>
 <script>
 import MNoticeBar from '../index';
 
 export default {
-	name: 'vc-notice-bar-basic',
+	name: 'vc-m-notice-bar-basic',
 	components: {
-		'vc-notice-bar': MNoticeBar,
+		'vc-m-notice-bar': MNoticeBar,
 	},
 	data() {
 		return {
-			// text: 'news news news news news news news news news news news.'
-			text:
-				'我的家在东北我的家在东北我的家在东北我的家在东北我的家在东北我的家在东北',
+			text: 'news news news news news news news news news news news.'
 		};
 	},
-	computed: {},
-	methods: {},
+	methods: {
+		handleClickBar() {
+			console.log('click');
+		},
+		handleIconClick() {
+			console.log('icon click');
+		},
+		handleTextClick() {
+			console.log('text click');
+		},
+		renderIcon(h) {
+			return h('div', {
+				style: {
+					color: 'red',
+					fontSize: '20px'
+				}
+			}, 'icon');
+		},
+	},
 };
 </script>

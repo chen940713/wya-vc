@@ -12,4 +12,3 @@ export default (propsType = {}, opts = {}) => ({
 		return ctx.props.render(h, params);
 	}
 });
-

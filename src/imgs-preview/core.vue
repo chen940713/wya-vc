@@ -30,7 +30,7 @@
 						title="全屏"
 					/>
 					<button class="pswp__button pswp__button--zoom" title="缩放"/>
-					
+
 					<div class="pswp__preloader">
 						<div class="pswp__preloader__icn">
 							<div class="pswp__preloader__cut">
@@ -51,8 +51,8 @@
 					title="下一张"
 				/>
 				<div class="pswp__caption">
-					<div 
-						class="pswp__caption__center" 
+					<div
+						class="pswp__caption__center"
 						style="text-align: center"
 					/>
 				</div>
@@ -182,9 +182,9 @@ const config = {
 
 			// 实例
 			this.photoSwipe = new Photoswipe(
-				pswpElement, 
-				PhotoswipeUIDefault, 
-				this.images, 
+				pswpElement,
+				PhotoswipeUIDefault,
+				this.images,
 				this.opts
 			);
 			this.getInstance && this.getInstance(this.photoSwipe);

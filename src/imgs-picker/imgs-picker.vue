@@ -1,7 +1,7 @@
 <template>
 	<component :is="tag" class="vcp-imgs-picker">
-		<div 
-			v-for="(item, index) in data" 
+		<div
+			v-for="(item, index) in data"
 			:key="typeof item === 'object' ? item.uid : item"
 			:class="item.retcode == 0 && '__error'"
 			class="__item __normal"
@@ -21,6 +21,7 @@
 						<slot v-bind="{url: item, index}" name="operate" />
 					</div>
 				</div>
+				<div class="__click-area" @click="handlePreview($event, index)"/>
 			</div>
 			<div v-else class="__img __flex-cc">
 				<div v-if="item.percent && item.percent != 100" class="__pc-bg">
@@ -38,8 +39,9 @@
 					</div>
 				</div>
 			</div>
+			<img src="./svg/close_circle.png" alt="" class="__close" @click="handleDel(item)">
 		</div>
-		<vc-upload 
+		<vc-upload
 			v-show="!disabled && (dataSource.length < max || max === 0)"
 			v-bind="upload"
 			:accept="accept"
@@ -101,7 +103,7 @@ export default {
 		// format: {
 		// 	type: Function,
 		// 	default() {
-				
+
 		// 	}
 		// }
 	},
@@ -118,7 +120,7 @@ export default {
 	methods: {
 		setData(dataSource) {
 			if (dataSource === this.data) return;
-			
+
 			this.data = dataSource;
 			this.dispatch('FormItem', 'on-form-change', dataSource);
 		},
@@ -236,11 +238,16 @@ export default {
 		cursor: pointer;
 		border: 1px solid #d9d9d9;
 		padding: 8px;
+		position: relative;
+		.__close {
+			width: 25px;
+
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
 	}
-	.__item:hover .__mask {
-		transition: opacity 0.5s;
-		opacity: 1;
-	}
+
 	.__flex-cc {
 		display: flex;
 		align-items: center;
@@ -316,6 +323,33 @@ export default {
 		&:after {
 			width: 28px;
 			height: 2px;
+		}
+	}
+
+	@media screen and (min-width: 450px) {
+		.__item {
+			.__close {
+				display: none;
+			}
+		}
+		.__item:hover .__mask {
+			transition: opacity 0.5s;
+			opacity: 1;
+		}
+	}
+
+	@media screen and (max-width: 450px) {
+		.__img {
+			.__click-area {
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.__item {
+
+			.__mask {
+				display: none;
+			}
 		}
 	}
 }

@@ -1,99 +1,167 @@
 <template>
-	<div v-if="visible" class="vcm-notice-bar">
-		<div v-if="showIcon" class="_icon">1</div>
-		<div ref="notice-bar-text" class="_text">
-			<div ref="notice-bar-content" class="_content">{{ text }}</div>
+	<div
+		v-if="visible"
+		class="vcm-notice-bar"
+		@click="type === 'link' ? handleClick('link') : ''"
+	>
+		<div
+			v-if="showIcon"
+			class="_icon"
+			@click="type !== 'link' ? handleIconClick() : ''"
+		>
+			<vc-customer-row :render="renderIcon"/>
 		</div>
-		<div v-if="showClose" class="_btn" @click="handleClose()">xxxxx</div>
-		<div v-if="showEnter" class="_btn">></div>
+
+		<div
+			class="_marquee-wrap"
+			@click="type !== 'link' ? handleTextClick() : ''"
+		>
+			<marquee
+				class="_marquee"
+				align="middle"
+				behavior="scroll"
+				scrollamount="3"
+			>{{ text }}</marquee>
+		</div>
+
+		<div
+			v-if="type === 'closeable'"
+			class="_btn"
+			@click="handleClick('closeable')"
+		>
+			<vc-customer-row
+				:render="renderBtn"
+				type="closeable"
+			/>
+		</div>
+
+		<div
+			v-if="showBtn"
+			class="_btn"
+			@click="type === 'click' ? handleClick('click') : ''"
+		>
+			<vc-customer-row
+				:render="renderBtn"
+				type="link"
+			/>
+		</div>
 	</div>
 </template>
 
 <script>
+import CreateCustomer from '../create-customer/index';
+
+const CustomerRow = CreateCustomer({
+	type: String,
+});
+
 export default {
 	name: 'vcm-notice-bar',
+	components: {
+		'vc-customer-row': CustomerRow,
+	},
 	props: {
 		text: {
 			type: String,
-			default: ''
+			default: '',
 		},
-		showClose: {
-			type: Boolean,
-			default: false
-		},
-		showEnter: {
-			type: Boolean,
-			default: false
+		type: {
+			type: String,
+			default: '',
+			validator(v) {
+				// 必须匹配下列字符串中的一个
+				return ['', 'closeable', 'link', 'click'].indexOf(v) !== -1;
+			},
 		},
 		showIcon: {
 			type: Boolean,
-			default: false
+			default: false,
+		},
+		renderIcon: {
+			type: Function,
+			default(h) {
+				return h('img', {
+					attrs: {
+						src: require('./svg/gg.svg'),
+					},
+				});
+			},
+		},
+		renderBtn: {
+			type: Function,
+			default(h, { type }) {
+				let close = h('img', {
+					attrs: {
+						src: require('./svg/close.svg'),
+					},
+				});
+				let link = h('img', {
+					attrs: {
+						src: require('./svg/right.svg'),
+					},
+				});
+				let dom = type === 'link' ? link : close;
+				return dom;
+			},
 		},
 	},
-
 	data() {
 		return {
-			visible: true
+			visible: true,
 		};
 	},
-	mounted() {
-		const el = this.$refs['notice-bar-content'];
-		const wrap = this.$refs['notice-bar-text'];
-		let width = el.scrollWidth;
-		let wrapWidth = wrap.clientWidth;
-		if (width <= wrapWidth) return;
-		let count = 0;
-		setTimeout(() => {
-			this.timer = setInterval(() => {
-				count -= 10;
-				if (count < width * -1) {
-					el.style.transition = 'none';
-					el.style.left = `${wrapWidth}px`;
-					count = wrapWidth;
-				} else {
-					el.style.transition = 'all .3s linear';
-					el.style.left = `${count}px`;
-				}
-			}, 300); // 动画时间
-		}, 500);
-	},
-	destroyed() {
-		this.timer && clearTimeout(this.timer);
+	computed: {
+		showBtn() {
+			return /^link|click$/.test(this.type);
+		},
 	},
 	methods: {
-		handleClose(e) {
-			this.visible = false;
-			this.timer && clearTimeout(this.timer);
-			this.$emit('close');
+		handleClick(action) {
+			if (action === 'closeable') {
+				this.visible = false;
+			}
+			this.$emit('on-click');
 		},
-		handleEnter() {
-
-		}
-	}
+		handleIconClick() {
+			this.$emit('icon-click');
+		},
+		handleTextClick() {
+			this.$emit('text-click');
+		},
+	},
 };
 </script>
 
 <style lang="scss" scoped>
-.vcm-notice-bar{
+.vcm-notice-bar {
 	display: flex;
-	._icon{
+	color: #f76a24;
+	background-color: #fefcec;
+	padding: 5px 0;
+	._icon {
 		margin-left: 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		img {
+			height: 15px;
+		}
 	}
-	._btn{
-		padding-right: 10px;
+	._btn {
+		margin-right: 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		img {
+			height: 15px;
+		}
 	}
-	._text{
-		flex: 1;
-		margin: 0 10px;
-		overflow: hidden;
-		position: relative;
-
-		._content{
-			white-space: nowrap;
-
-			position: absolute;
-			top: 0;
-			left: 0;
+	._marquee-wrap {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		._marquee {
+			margin: 0 5px;
 		}
 	}
 }

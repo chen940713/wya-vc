@@ -29,8 +29,8 @@ upload | upload组件的属性 | `object` | {}
 <template>
 	<i-form
 		ref="form"
-		:model="formValidate" 
-		:rules="ruleValidate" 
+		:model="formValidate"
+		:rules="ruleValidate"
 	>
 		<i-form-item prop="imgs">
 			<vc-imgs-picker v-model="formValidate.imgs" :max="2" />
@@ -71,7 +71,7 @@ export default {
 		};
 	},
 	computed: {
-		
+
 	},
 	methods: {
 		handleSubmit(name) {
